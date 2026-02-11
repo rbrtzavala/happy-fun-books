@@ -6,11 +6,9 @@ import (
 )
 
 func main() {
-	book := books.Book {
-		Title: "Engineering in Plain Sight",
-		Author: "Grady Hollhouse",
-		Copies: 142,
+	fmt.Println("Books in stock:")
+	for _, book := range books.GetAllBooks() {
+		
+		fmt.Println(books.BookToString(book))
 	}
-    fmt.Println("Books in stock:")
-    fmt.Println(books.BookToString(book))
 }
