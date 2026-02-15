@@ -1,6 +1,10 @@
 package books
 
-import "fmt"
+import (
+	"fmt"
+	"maps"
+	"slices"
+)
 
 type Book struct {
 	Title	string
@@ -9,34 +13,38 @@ type Book struct {
 	ID		string
 }
 
-func BookToString(book Book) string {
+type Catalog map[string]Book
+
+func (book Book) String() string {
 	return fmt.Sprintf("%v by %v (copies: %v)", book.Title, book.Author, book.Copies)
 }
 
-var catalog = []Book{
-	{
-		Title: "In the Company of Cheerful Ladies",
-		Author: "Alexander McCall Smith",
-		Copies: 81,
-		ID: "abc",
-	},
-	{
-		Title: "White Heat",
-		Author: "Dominic Sandbrook",
-		Copies: 23,
-		ID: "xyz",
-	},
+func (catalog Catalog) GetAllBooks() []Book {
+	return slices.Collect(maps.Values(catalog))
 }
 
-func GetAllBooks() []Book {
-	return catalog
+func (catalog Catalog) GetBook(ID string) (Book, bool) {
+	book, ok := catalog[ID]
+	return book, ok
 }
 
-func GetBook(ID string) (Book, bool) {
-	for _, book := range catalog {
-		if book.ID == ID {
-			return book, true
-		}
+func (catalog Catalog) AddBook(book Book) {
+	catalog[book.ID] = book
+}
+
+func GetCatalog() Catalog {
+	return Catalog{
+		"abc": {
+			Title:  "In the Company of Cheerful Ladies",
+			Author: "Alexander McCall Smith",
+			Copies: 1,
+			ID:     "abc",
+		},
+		"xyz": {
+			Title:  "White Heat",
+			Author: "Dominic Sandbrook",
+			Copies: 2,
+			ID:     "xyz",
+		},
 	}
-	return Book{}, false
 }
